@@ -275,7 +275,6 @@ LinkBase *make_matrix(int *table) {
             while (static_cast<LinkColumn*>(node)->key != cell_number) { node = node->right;}
             node = node->below;
             while (static_cast<LinkNode*>(node)->row != row_in_matrix) { node = node->below; }
-            // cout << static_cast<LinkNode*>(node)->row << endl;
             // node's row relates to the value in the cell
 
             // delete rows that intersect current
@@ -284,7 +283,6 @@ LinkBase *make_matrix(int *table) {
                 for (LinkBase *other_node = node_in_row->below; other_node != node_in_row;
                         other_node = other_node->below) {
                     if (!other_node->is_column()) {
-                            // cout << "r r " << static_cast<LinkNode*>(other_node)->row << endl;
                         remove_row(other_node);
                         free_row(other_node);
                     }
