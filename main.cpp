@@ -372,7 +372,11 @@ bool check(int *table) {
     return true;
 }
 
-void algorithmX(LinkBase *matrix, int *table) {
+class Solution_found_exception
+{
+} solution_found_exception;
+
+void algorithmX(LinkBase *matrix, int *table, bool find_first=false) {
     LinkBase *node = matrix->right;
     if (node == matrix) {
         // matrix has zero size
@@ -382,6 +386,10 @@ void algorithmX(LinkBase *matrix, int *table) {
         auto end_t = chrono::steady_clock::now();
         auto elapsed_ms = chrono::duration_cast<chrono::milliseconds>(end_t - start_t);
         cout << "time: " << elapsed_ms.count() << endl;
+
+        if (find_first) {
+            throw solution_found_exception;
+        }
         return;
     }
 
@@ -434,7 +442,7 @@ void algorithmX(LinkBase *matrix, int *table) {
         int assumption = static_cast<LinkNode*>(node)->row;
         answer.push(assumption);
         table[assumption / SIZE] = assumption % SIZE + 1;
-        algorithmX(matrix, table);
+        algorithmX(matrix, table, find_first);
         answer.pop();
 
         // restore matrix
@@ -484,7 +492,15 @@ int main() {
 
     //print_matrix(matrix);
 
-    algorithmX(matrix, table);
+    try {
+        algorithmX(matrix, table, true);
+
+        // To find all solutions use:
+        //algorithmX(matrix, table);
+    }
+    catch(Solution_found_exception& e) {
+        cout << "Note: there may be other solutions" << endl;
+    }
 
     free_memory(table, matrix);
 
