@@ -44,6 +44,8 @@ void print_table(int *table) {
     }
 }
 
+
+// Nodes for 2-dimensional circular doubly linked list
 struct LinkBase
 {
     LinkBase *above;
@@ -84,6 +86,8 @@ struct LinkColumn : LinkBase
     virtual bool is_column() { return true; }
 };
 
+
+// Methods for fast removal and insertion in doubly linked list
 inline void insert_below(LinkBase *node, LinkBase *other) {
     node->above = other;
     node->below = other->below;
@@ -156,6 +160,8 @@ void restore_column(LinkBase *node) {
     restore_in_row(node);
 }
 
+
+// Memory freeing methods
 void free_row(LinkBase *node) {
     node->left->right = nullptr;
     while (node != nullptr) {
@@ -174,6 +180,9 @@ void free_column(LinkBase *node) {
     }
 }
 
+
+// Here block is a small square in sudoku
+// For common 9*9 variant there are 9 blocks 3*3
 inline int get_block_number(int cell_number) {
     int row = cell_number / SIZE;
     int col = cell_number % SIZE;
@@ -182,6 +191,10 @@ inline int get_block_number(int cell_number) {
     return block_row * SIZE_ROOT + block_col;
 }
 
+
+// Print a sparsed matrix that is stored in doubly linked list
+// column by column
+// Note: matrix is huge even for 9*9 sudoku (up to 9*9*4 = 324 columns)
 void print_matrix(LinkBase *matrix) {
     LinkBase *col = matrix->right;
     while (col != matrix) {
@@ -197,6 +210,8 @@ void print_matrix(LinkBase *matrix) {
 }
 
 
+// Make matrix for Knuth's AlgorithmX according to sudoku table
+// firstly full matrix is created as if the table was empty
 LinkBase *make_matrix(int *table) {
     LinkBase *head = new LinkColumn{-1};
 
@@ -306,6 +321,8 @@ LinkBase *make_matrix(int *table) {
     return head;
 }
 
+
+// Check sudoku table. It is acceptable if there are unfilled cells
 bool check(int *table) {
     set<int> found;
     // rows
@@ -368,7 +385,7 @@ void algorithmX(LinkBase *matrix, int *table) {
         return;
     }
 
-    // find column with the nodes quantity
+    // find column with the least nodes quantity
     LinkBase *col = node;
     while (node != matrix) {
         int col_size = static_cast<LinkColumn*>(node)->size;
@@ -459,7 +476,7 @@ int main() {
 
     int *table;
 
-    read_input("in16b16.txt", table);
+    read_input("input.txt", table);
     print_table(table);
     cout << endl;
 
